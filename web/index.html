@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent Conference</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">🤖 Agent Conference</div>
+      <div class="header-right">
+        <div class="notif-bell" id="notifBell" title="Notifications">
+          <span>🔔</span>
+          <span class="notif-badge" id="notifBadge">0</span>
+        </div>
+        <div class="server-status" id="serverStatus" title="Pause or resume agent processing">
+          <span class="dot" id="serverDot"></span>
+          <span id="serverText">Checking...</span>
+          <label class="server-switch">
+            <input type="checkbox" id="serverToggle" aria-label="Toggle agent server">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <div class="provider-bar">
+      <div class="provider-mode">
+        <span>Execution</span>
+        <select id="routingMode" aria-label="Execution routing mode">
+          <option value="smart">Smart routing</option>
+          <option value="codex">Prefer Codex</option>
+          <option value="cline">Prefer VS Cline</option>
+          <option value="ollama">Local Ollama only</option>
+        </select>
+      </div>
+      <div class="provider-states" id="providerStates"></div>
+      <button class="usage-summary" id="usageSummary" title="Provider request and estimated token usage">Usage: loading…</button>
+    </div>
+
+    <!-- Notification dropdown -->
+    <div class="notif-panel" id="notifPanel">
+      <div class="notif-header">
+        <strong>Notifications</strong>
+        <button class="notif-clear" id="notifClear">Mark all read</button>
+      </div>
+      <div class="notif-list" id="notifList"></div>
+      <div class="checkpoint-section">
+        <div class="checkpoint-title">Human checkpoints</div>
+        <div class="checkpoint-list" id="checkpointList"></div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <!-- Left: Agents -->
+      <aside class="panel agents-panel" id="agentsPanel">
+        <div class="panel-header">
+          <h3>Agents</h3>
+          <button class="btn-add" id="addAgentBtn" title="Add agent">+</button>
+        </div>
+        <div class="agents-list" id="agentsList"></div>
+      </aside>
+      <div class="resize-handle" id="leftResize"></div>
+
+      <!-- Center: Chat -->
+      <main class="chat-panel">
+        <div class="tabs">
+          <button class="tab active" data-tab="conference">📢 Conference</button>
+          <button class="tab" data-tab="tasks">✅ Tasks</button>
+        </div>
+        <div class="chat-header">
+          <span id="chatTitle">Conference Chat</span>
+          <div>
+            <button class="btn-clear" id="addTaskBtn" style="margin-right:8px">+ Task</button>
+            <button class="btn-clear" id="clearBtn">Clear</button>
+          </div>
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="chat-input-row">
+          <textarea id="messageInput" rows="1" placeholder="Type a message... (Enter to send, Shift+Enter for new line)"></textarea>
+          <button class="btn-send" id="sendBtn">Send</button>
+        </div>
+      </main>
+
+      <div class="resize-handle" id="rightResize"></div>
+
+      <!-- Right: Tabbed panels -->
+      <aside class="panel right-panel" id="rightPanel">
+        <div class="right-tabs">
+          <button class="right-tab active" data-righttab="projects">📁 Projects</button>
+          <button class="right-tab" data-righttab="workstation">🔧 Work Station</button>
+          <button class="right-tab" data-righttab="output">📤 Output</button>
+        </div>
+
+        <!-- Projects tab -->
+        <div class="right-content" id="tab-projects">
+          <div class="panel-header">
+            <h3>Projects</h3>
+            <div class="btn-group">
+              <button class="btn-import" id="importBtn">Open Folder</button>
+              <button class="btn-add" id="addProjectBtn" title="Add folder">+</button>
+            </div>
+          </div>
+          <div class="project-drop-zone" id="projectDropZone">Drop a file or folder here</div>
+          <div class="projects-list" id="projectsList"></div>
+          <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+          <input type="file" id="instructionInput" accept=".txt,.md,.json,.prompt,text/plain,text/markdown,application/json" hidden>
+        </div>
+
+        <!-- Work Station tab -->
+        <div class="right-content hidden" id="tab-workstation">
+          <div class="panel-header">
+            <h3>Work Station</h3>
+            <button class="btn-clear" id="clearWorkstation">Clear</button>
+          </div>
+          <div class="workstation-list" id="workstationList">
+            <div class="empty-msg">No active work</div>
+          </div>
+        </div>
+
+        <!-- Output tab -->
+        <div class="right-content hidden" id="tab-output">
+          <div class="panel-header">
+            <h3>Output</h3>
+            <button class="btn-clear" id="clearOutput">Clear</button>
+          </div>
+          <div class="output-list" id="outputList">
+            <div class="empty-msg">No output yet</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="workstationModal" role="dialog" aria-modal="true" aria-labelledby="workstationModalTitle">
+    <div class="workstation-window">
+      <div class="window-header">
+        <div>
+          <div class="window-title" id="workstationModalTitle">Agent activity</div>
+          <div class="window-subtitle" id="workstationModalAgent"></div>
+        </div>
+        <button class="window-close" id="closeWorkstationModal" aria-label="Close">×</button>
+      </div>
+      <div class="window-status" id="workstationModalStatus"></div>
+      <pre class="window-content" id="workstationModalContent"></pre>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

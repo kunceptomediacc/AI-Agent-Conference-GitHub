@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "spreadsheet_id": "",
+  "credentials_path": "~/AI-Agent-Conference/credentials.json",
+  "daily_hour": 18,
+  "daily_minute": 0,
+  "project_sheets": {}
+}
